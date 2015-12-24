@@ -59,7 +59,8 @@ class Bot(telepot.Bot):
         battery_info = battery_status.split('\n')
 
         response = '```\n%s\n%s```' % (
-            battery_info[0].strip(), battery_info[1].strip()
+            battery_info[0].strip().replace(' ' * 10, '  '),
+            battery_info[1].strip().replace(' ' * 10, '  ')
         )
 
         if not send_only_if_discharging or \
