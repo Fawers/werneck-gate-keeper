@@ -50,6 +50,16 @@ class Bot(telepot.Bot):
             getattr(self, method)(msg)
 
     def handle_ativar_portao(self, msg):
+        serial.write(ACTIVATE_GATE)
+        response = serial.readline()
+
+        if not response:
+            response = 'No response received'
+        else:
+            response = 'arduino: ' + response.decode('utf-8')
+
+        self.sendMessage(msg['chat']['id'], response)
+
         self.handle_bateria(msg, True)
 
     def handle_bateria(self, msg, send_only_if_discharging=False):
@@ -83,6 +93,7 @@ class Bot(telepot.Bot):
             self.reset_messages()
 
         last_offset = 0
+        print('Listening...')
 
         while True:
             try:

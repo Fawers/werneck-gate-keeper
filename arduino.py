@@ -11,8 +11,7 @@ def get_serial_port():
     if match:
         return match.group()
 
-    return None
+    raise RuntimeError('Serial not found')
 
 
-serial = Serial(get_serial_port(), 9600)
-serial.timeout = 5
+serial = Serial(get_serial_port(), 9600, timeout=5)
