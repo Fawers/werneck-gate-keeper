@@ -14,4 +14,4 @@ def get_serial_port():
     raise RuntimeError('Serial not found')
 
 
-serial = Serial(get_serial_port(), 9600, timeout=5)
+serial = Serial(get_serial_port(), 9600, timeout=5, rtscts=True)
