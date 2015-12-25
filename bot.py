@@ -23,6 +23,7 @@ class Bot(telepot.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.username = self.getMe()['username']
+        self.gate = {}
 
     def reset_messages(self):
         updates = self.getUpdates(timeout=1)
@@ -50,6 +51,21 @@ class Bot(telepot.Bot):
             getattr(self, method)(msg)
 
     def handle_ativar_portao(self, msg):
+        username = msg['from']['username']
+        self.gate[username] = msg['date']
+
+        self.sendMessage(
+            msg['chat']['id'],
+            '/confirma ?',
+            reply_to_message_id=msg['message_id'])
+
+    def handle_confirma(self, msg):
+        username = msg['from']['username']
+
+        if msg['date'] - self.gate.get(username, -21) > 20:
+            self.sendMessage(msg['chat']['id'], 'timeout')
+            return
+
         serial.write(ACTIVATE_GATE)
         response = serial.readline()
 
